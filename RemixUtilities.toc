@@ -1,0 +1,8 @@
+## Interface: 100207
+## Title: Remix Utilities
+## Notes: A few QoL additions for MoP Remix
+## Author: LBevan
+## Version: 1.0
+
+RemixUtilities.lua
+RemixMailUtilities.lua
