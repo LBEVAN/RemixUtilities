@@ -43,8 +43,7 @@ end
 local function InitFrames()
     -- create the mail frame
     if not RemixMailFrame then
-        RemixMailFrame = CreateFrame("Frame", "RemixMailUtilities", MailFrame, "BasicFrameTemplate")
-        RemixMailFrame:SetSize(150, 140)
+        RemixMailFrame = CreateFrame("Frame", "RemixMailFrame", MailFrame, "BasicFrameTemplate")
         RemixMailFrame:SetPoint("TOPLEFT", MailFrame, "TOPRIGHT", 10, 0)
         RemixMailFrame:EnableMouse(true)
         RemixMailFrame.title = RemixMailFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
@@ -72,7 +71,7 @@ local function InitFrames()
 
     -- create the info frame
     if not RemixInfoFrame then
-        RemixInfoFrame = CreateFrame("Frame", "InfoFrame", RemixMailFrame)
+        RemixInfoFrame = CreateFrame("Frame", "RemixInfoFrame", RemixMailFrame)
         RemixInfoFrame:SetPoint("TOPLEFT", LootExpThreadsButton, "BOTTOMLEFT", 0, -5)
         RemixInfoFrame:SetSize(160, 20)
 
@@ -86,7 +85,7 @@ local function InitFrames()
     end
 
     -- finally resize the frame
-    RemixUtilities:ResizeFrame(RemixMailFrame)
+    RemixUtilities:ResizeFrame(RemixMailFrame, { RemixInfoFrame.statThreadsText, RemixInfoFrame.expThreadsText })
 end
 
 -- init

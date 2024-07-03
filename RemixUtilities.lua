@@ -41,25 +41,40 @@ function RemixUtilities:ResizeButton(button, padding)
     button:SetWidth(textWidth + 20)
 end
 
---- Resizes the frame based on associated buttons and adds padding
-function RemixUtilities:ResizeFrame(frame, padding)
+--- Resizes the frame based on associated buttons, text components and adds padding
+function RemixUtilities:ResizeFrame(frame, textComponents, padding)
     padding = padding or 10 -- default value
 
     local totalHeight = 0
     local maxWidth = 0
 
-    -- todo: add checks for additional frames/text
+    -- check for children of the frame, things like buttons, but does not include text
     for _, child in ipairs({frame:GetChildren()}) do
-        if child:IsObjectType("Button") then
-            local buttonWidth = child:GetWidth()
-            if buttonWidth > maxWidth then
-                maxWidth = buttonWidth
+        local childWidth = child:GetWidth()
+        local childHeight = child:GetHeight()
+
+        if childWidth > maxWidth then
+            maxWidth = childWidth
+        end
+
+        totalHeight = totalHeight + childHeight
+    end
+
+    -- check for any text components specified as these arent considered children of a frame
+    if textComponents then
+        for _, text in ipairs(textComponents) do
+            local width = text:GetStringWidth()
+            local height = text:GetStringHeight()
+
+            if width > maxWidth then
+                maxWidth = width
             end
-            totalHeight = totalHeight + child:GetHeight() + padding
+
+            totalHeight = totalHeight + height
         end
     end
 
-    frame:SetSize(maxWidth + padding * 2, totalHeight + padding)
+    frame:SetSize(maxWidth + padding * 2, totalHeight + padding * 2)
 end
 
 --- Counts the number of items in the mail that match the ids for each set, e.g. [1]=25,[2]=12
