@@ -8,13 +8,17 @@ RemixUtilities.StatThreadIds = {
     -- mastery
     [210989] = true, [219262] = true, [219271] = true, [219280] = true,
     -- leech
-    [210987] = true, [219261] = true, [219270]= true, [219279] = true
-    -- todo: get other ids (https://www.wowhead.com/guide/wow-remix-mists-of-pandaria-overview)
+    [210987] = true, [219261] = true, [219270] = true, [219279] = true,
     -- speed
+    [210986] = true, [219260] = true, [219269] = true, [219278] = true,
     -- haste
+    [210985] = true, [219259] = true, [219268] = true, [219277] = true,
     -- crit
+    [210984] = true, [219258] = true, [219267] = true, [219276] = true,
     -- stam
+    [210983] = true, [219257] = true, [219266] = true, [219275] = true,
     -- int/str/agi
+    [210982] = true, [219256] = true, [219265] = true, [219274] = true
 }
 
 RemixUtilities.ExpThreadIds = {
