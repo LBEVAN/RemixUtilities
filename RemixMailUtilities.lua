@@ -4,9 +4,23 @@ local lootingFrame;
 
 --- Updates the info frame, setting the text based on item counts
 local function UpdateInfoFrame()
-    local mailCounts = RemixUtilities:CountMailItemsById(RemixUtilities.StatThreadIds, RemixUtilities.ExpThreadIds)
-    RemixInfoFrame.statThreadsText:SetText(([[Stat Threads: %d]]):format(mailCounts[1]))
-    RemixInfoFrame.expThreadsText:SetText(([[Exp Threads: %d]]):format(mailCounts[2]))
+    -- find the ids refs for each combination
+    local itemIds = {}
+    for _, entry in ipairs(RemixInfoFrame.textComponentData) do
+        table.insert(itemIds, entry[1])
+    end
+
+    -- query the counts for the item combinations
+    local mailCounts = RemixUtilities:CountMailItemsById(unpack(itemIds))
+
+    -- update the text for each entry
+    for i, count in ipairs(mailCounts) do
+        local textComponent = RemixInfoFrame.textComponentData[i][2]
+        textComponent:SetText(textComponent.templateText:format(count))
+    end
+
+    -- ensure the frame scales with the new data
+    RemixUtilities:ResizeFrame(RemixMailFrame, RemixUtilities:ExtractIndexedValues(RemixInfoFrame.textComponentData, 2))
 end
 
 --- Stops any active looting process
@@ -67,7 +81,7 @@ local function InitFrames()
         LootStatThreadsButton:SetScript("OnClick", function() LootItems(RemixUtilities.StatThreadIds) end)
     end
 
-    -- create the 'loot xp threads' button
+    -- create the 'loot exp threads' button
     if not LootExpThreadsButton then
         LootExpThreadsButton = CreateFrame("Button", "LootExpThreadsButton", RemixMailFrame, "UIPanelButtonTemplate")
         LootExpThreadsButton:SetPoint("TOP", LootStatThreadsButton, "TOP", 0, -25   )
@@ -76,23 +90,43 @@ local function InitFrames()
         LootExpThreadsButton:SetScript("OnClick", function() LootItems(RemixUtilities.ExpThreadIds) end)
     end
 
+    -- create the 'loot bonus exp tokens' button
+    if not LootBonusExpTokensButton then
+        LootBonusExpTokensButton = CreateFrame("Button", "LootBonusExpTokensButton", RemixMailFrame, "UIPanelButtonTemplate")
+        LootBonusExpTokensButton:SetPoint("TOP", LootExpThreadsButton, "TOP", 0, -25   )
+        LootBonusExpTokensButton:SetText("Loot Bonus Exp Tokens")
+        RemixUtilities:ResizeButton(LootBonusExpTokensButton)
+        LootBonusExpTokensButton:SetScript("OnClick", function() LootItems(RemixUtilities.BonusExpTokenIds) end)
+    end
+
     -- create the info frame
     if not RemixInfoFrame then
         RemixInfoFrame = CreateFrame("Frame", "RemixInfoFrame", RemixMailFrame)
-        RemixInfoFrame:SetPoint("TOPLEFT", LootExpThreadsButton, "BOTTOMLEFT", 0, -5)
+        RemixInfoFrame:SetPoint("TOPLEFT", LootBonusExpTokensButton, "BOTTOMLEFT", 0, -5)
         RemixInfoFrame:SetSize(160, 20)
 
         RemixInfoFrame.statThreadsText = RemixInfoFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-        RemixInfoFrame.statThreadsText:SetPoint("CENTER", LootExpThreadsButton, "CENTER", 0, -30)
+        RemixInfoFrame.statThreadsText:SetPoint("CENTER", LootBonusExpTokensButton, "CENTER", 0, -30)
+        RemixInfoFrame.statThreadsText.templateText =(([[Stat Threads: %d]]))
 
         RemixInfoFrame.expThreadsText = RemixInfoFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
         RemixInfoFrame.expThreadsText:SetPoint("CENTER", RemixInfoFrame.statThreadsText, "CENTER", 0, -15)
+        RemixInfoFrame.expThreadsText.templateText =(([[Exp Threads: %d]]))
+
+        RemixInfoFrame.bonusExpTokensText = RemixInfoFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+        RemixInfoFrame.bonusExpTokensText:SetPoint("CENTER", RemixInfoFrame.expThreadsText, "CENTER", 0, -15)
+        RemixInfoFrame.bonusExpTokensText.templateText = (([[Bonus Exp Tokens: %d]]))
+
+        RemixInfoFrame.textComponentData = {}
+        table.insert(RemixInfoFrame.textComponentData,{ RemixUtilities.StatThreadIds, RemixInfoFrame.statThreadsText })
+        table.insert(RemixInfoFrame.textComponentData, { RemixUtilities.ExpThreadIds, RemixInfoFrame.expThreadsText })
+        table.insert(RemixInfoFrame.textComponentData,{ RemixUtilities.BonusExpTokenIds, RemixInfoFrame.bonusExpTokensText })
 
         UpdateInfoFrame()
     end
 
     -- finally resize the frame
-    RemixUtilities:ResizeFrame(RemixMailFrame, { RemixInfoFrame.statThreadsText, RemixInfoFrame.expThreadsText })
+    RemixUtilities:ResizeFrame(RemixMailFrame, RemixUtilities:ExtractIndexedValues(RemixInfoFrame.textComponentData, 2))
 end
 
 -- init

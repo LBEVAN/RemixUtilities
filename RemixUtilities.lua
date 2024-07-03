@@ -22,7 +22,11 @@ RemixUtilities.StatThreadIds = {
 }
 
 RemixUtilities.ExpThreadIds = {
-    [217722] = true, [219264] = true, [219273] = true, [219282] = true,
+    [217722] = true, [219264] = true, [219273] = true, [219282] = true
+}
+
+RemixUtilities.BonusExpTokenIds = {
+    [224407] = true, [224408] = true, [220763] = true, [220764] = true
 }
 
 --- Updates the button text and dynamically resizes the button with padding
@@ -100,6 +104,15 @@ function RemixUtilities:CountMailItemsById(...)
     end
 
     return results
+end
+
+--- Extracts the indexed values from the specified table
+function RemixUtilities:ExtractIndexedValues(dataTable, index)
+    local extractedValues = {}
+    for _, entry in ipairs(dataTable) do
+        table.insert(extractedValues, entry[index])
+    end
+    return extractedValues
 end
 
 -- add this sub-addon to the table
