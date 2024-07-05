@@ -29,6 +29,18 @@ RemixUtilities.BonusExpTokenIds = {
     [224407] = true, [224408] = true, [220763] = true, [220764] = true
 }
 
+RemixUtilities.SpoolIds = {
+    [226144] = true, [226145] = true, [226143] = true, [226142] = true
+}
+
+RemixUtilities.BronzeCacheIds = {
+    [223908] = true, [223909] = true, [223910] = true, [223911] = true
+}
+
+RemixUtilities.InfiniteTreasureIds = {
+    [211279] = true, [211932] = true, [211279] = true
+}
+
 --- Updates the button text and dynamically resizes the button with padding
 function RemixUtilities:UpdateButtonText(button, text, padding)
     padding = padding or 20 -- default value

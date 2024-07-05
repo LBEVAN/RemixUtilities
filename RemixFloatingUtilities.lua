@@ -16,7 +16,7 @@ local function InitFrames()
     if not RemixFloatingFrame then
         RemixFloatingFrame = CreateFrame("Frame", "RemixFloatingFrame", UIParent, "BasicFrameTemplate")
         RemixFloatingFrame:SetPoint("CENTER")
-        RemixFloatingFrame:SetSize(120, 70)
+        RemixFloatingFrame:SetSize(192, 67)
         RemixFloatingFrame:EnableMouse(true)
         RemixFloatingFrame.title = RemixFloatingFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
         RemixFloatingFrame.title:SetPoint("CENTER", RemixFloatingFrame.TitleBg, "CENTER", 0, 0)
@@ -62,9 +62,9 @@ local function InitFrames()
         UseExpThreadsButton:SetSize(32, 32)
         UseExpThreadsButton:SetPoint("TOPLEFT", RemixFloatingFrame, "TOPLEFT", 42, -30)
         UseExpThreadsButton:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
-        UseExpThreadsButton:SetNormalTexture(GetItemIcon(217722))
-        UseExpThreadsButton:SetPushedTexture(GetItemIcon(217722))
-        UseExpThreadsButton:SetHighlightTexture(GetItemIcon(217722))
+        UseExpThreadsButton:SetNormalTexture(GetItemIcon(220763))
+        UseExpThreadsButton:SetPushedTexture(GetItemIcon(220763))
+        UseExpThreadsButton:SetHighlightTexture(GetItemIcon(220763))
         UseExpThreadsButton:SetAttribute("type", "macro")
         UseExpThreadsButton:SetAttribute("macrotext", GenerateUseMacroStringWithIds(RemixUtilities.ExpThreadIds))
 
@@ -77,7 +77,74 @@ local function InitFrames()
             GameTooltip:Hide()
         end)
     end
+
+    -- create the use spools button
+    if not UseSpoolsButton then
+        UseSpoolsButton = CreateFrame("Button", "UseSpoolsButton", RemixFloatingFrame, "SecureActionButtonTemplate")
+        UseSpoolsButton:SetSize(32, 32)
+        UseSpoolsButton:SetPoint("TOPLEFT", RemixFloatingFrame, "TOPLEFT", 79, -30)
+        UseSpoolsButton:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
+        UseSpoolsButton:SetNormalTexture(GetItemIcon(226143))
+        UseSpoolsButton:SetPushedTexture(GetItemIcon(226143))
+        UseSpoolsButton:SetHighlightTexture(GetItemIcon(226143))
+        UseSpoolsButton:SetAttribute("type", "macro")
+        UseSpoolsButton:SetAttribute("macrotext", GenerateUseMacroStringWithIds(RemixUtilities.SpoolIds))
+
+        UseSpoolsButton:SetScript("OnEnter", function(self)
+            GameTooltip:SetOwner(self, "ANCHOR_BUTTON");
+            GameTooltip:ClearLines();
+            GameTooltip:SetText("Use Spools")
+        end)
+        UseSpoolsButton:SetScript("OnLeave", function(self)
+            GameTooltip:Hide()
+        end)
+    end
+
+    -- create the open bronze cache button
+    if not OpenBronzeCachesButton then
+        OpenBronzeCachesButton = CreateFrame("Button", "OpenBronzeCachesButton", RemixFloatingFrame, "SecureActionButtonTemplate")
+        OpenBronzeCachesButton:SetSize(32, 32)
+        OpenBronzeCachesButton:SetPoint("TOPLEFT", RemixFloatingFrame, "TOPLEFT", 116, -30)
+        OpenBronzeCachesButton:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
+        OpenBronzeCachesButton:SetNormalTexture(GetItemIcon(223911))
+        OpenBronzeCachesButton:SetPushedTexture(GetItemIcon(223911))
+        OpenBronzeCachesButton:SetHighlightTexture(GetItemIcon(223911))
+        OpenBronzeCachesButton:SetAttribute("type", "macro")
+        OpenBronzeCachesButton:SetAttribute("macrotext", GenerateUseMacroStringWithIds(RemixUtilities.BronzeCacheIds))
+
+        OpenBronzeCachesButton:SetScript("OnEnter", function(self)
+            GameTooltip:SetOwner(self, "ANCHOR_BUTTON");
+            GameTooltip:ClearLines();
+            GameTooltip:SetText("Open Bronze Caches")
+        end)
+        OpenBronzeCachesButton:SetScript("OnLeave", function(self)
+            GameTooltip:Hide()
+        end)
+    end
+
+    -- create the open bronze cache button
+    if not OpenInfiniteTreasuresButton then
+        OpenInfiniteTreasuresButton = CreateFrame("Button", "OpenInfiniteTreasuresButton", RemixFloatingFrame, "SecureActionButtonTemplate")
+        OpenInfiniteTreasuresButton:SetSize(32, 32)
+        OpenInfiniteTreasuresButton:SetPoint("TOPLEFT", RemixFloatingFrame, "TOPLEFT", 153, -30)
+        OpenInfiniteTreasuresButton:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
+        OpenInfiniteTreasuresButton:SetNormalTexture(GetItemIcon(211279))
+        OpenInfiniteTreasuresButton:SetPushedTexture(GetItemIcon(211279))
+        OpenInfiniteTreasuresButton:SetHighlightTexture(GetItemIcon(211279))
+        OpenInfiniteTreasuresButton:SetAttribute("type", "macro")
+        OpenInfiniteTreasuresButton:SetAttribute("macrotext", GenerateUseMacroStringWithIds(RemixUtilities.InfiniteTreasureIds))
+
+        OpenInfiniteTreasuresButton:SetScript("OnEnter", function(self)
+            GameTooltip:SetOwner(self, "ANCHOR_BUTTON");
+            GameTooltip:ClearLines();
+            GameTooltip:SetText("Open Infinite Caches")
+        end)
+        OpenInfiniteTreasuresButton:SetScript("OnLeave", function(self)
+            GameTooltip:Hide()
+        end)
+    end
 end
 
 
+-- init
 InitFrames()
