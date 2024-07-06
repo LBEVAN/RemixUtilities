@@ -1,5 +1,12 @@
 local addonName, addonTable = ...
 local RemixUtilities = addonTable.RemixUtilities
+local bagItemCounts = {
+    statThreads = 0,
+    expThreads = 0,
+    spools = 0,
+    bronzeCaches = 0,
+    infiniteTreasures = 0
+}
 
 --- Generates a macro string with '/use' actions for each of the specified item ids
 local function GenerateUseMacroStringWithIds(ids)
@@ -8,6 +15,60 @@ local function GenerateUseMacroStringWithIds(ids)
         macroText = macroText .. "/use item:" .. itemId .. "\n"
     end
     return macroText
+end
+
+--- Resets the bag item counts back to zero
+local function ResetBagItemCount()
+    for key in pairs(bagItemCounts) do
+        bagItemCounts[key] = 0
+    end
+end
+
+--- Updates the item count of the tracked items that are present in character bags
+local function UpdateBagItemCount()
+    ResetBagItemCount()
+
+    for bag = 4,0,-1 do
+        for slot = C_Container.GetContainerNumSlots(bag),1,-1 do
+            local info = C_Container.GetContainerItemInfo(bag, slot)
+            if info then
+                local itemId = info.itemID
+
+                if RemixUtilities.StatThreadIds[itemId] then
+                    bagItemCounts.statThreads = bagItemCounts.statThreads + 1
+                end
+
+                if RemixUtilities.ExpThreadIds[itemId] then
+                    bagItemCounts.expThreads = bagItemCounts.expThreads + 1
+                end
+
+                if RemixUtilities.SpoolIds[itemId] then
+                    bagItemCounts.spools = bagItemCounts.spools + 1
+                end
+
+                if RemixUtilities.BronzeCacheIds[itemId] then
+                    bagItemCounts.bronzeCaches = bagItemCounts.bronzeCaches + 1
+                end
+
+                if RemixUtilities.InfiniteTreasureIds[itemId] then
+                    bagItemCounts.infiniteTreasures = bagItemCounts.infiniteTreasures + 1
+                end
+            end
+        end
+    end
+
+    UseStatThreadsButton.countText:SetText(bagItemCounts.statThreads)
+    UseExpThreadsButton.countText:SetText(bagItemCounts.expThreads)
+    UseSpoolsButton.countText:SetText(bagItemCounts.spools)
+    OpenBronzeCachesButton.countText:SetText(bagItemCounts.bronzeCaches)
+    OpenInfiniteTreasuresButton.countText:SetText(bagItemCounts.infiniteTreasures)
+end
+
+--- Creates the item count frame and attaches it to the button
+local function CreateItemCountText(button, itemCount)
+    button.countText = button:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    button.countText:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 0, 0)
+    button.countText:SetText(itemCount)
 end
 
 --- Initialises the floating frame
@@ -53,6 +114,8 @@ local function InitFrames()
         UseStatThreadsButton:SetScript("OnLeave", function(self)
             GameTooltip:Hide()
         end)
+
+        CreateItemCountText(UseStatThreadsButton, bagItemCounts.statThreads)
     end
 
     -- create the use exp threads button
@@ -76,6 +139,8 @@ local function InitFrames()
         UseExpThreadsButton:SetScript("OnLeave", function(self)
             GameTooltip:Hide()
         end)
+
+        CreateItemCountText(UseExpThreadsButton, bagItemCounts.expThreads)
     end
 
     -- create the use spools button
@@ -98,6 +163,8 @@ local function InitFrames()
         UseSpoolsButton:SetScript("OnLeave", function(self)
             GameTooltip:Hide()
         end)
+
+        CreateItemCountText(UseSpoolsButton, bagItemCounts.spools)
     end
 
     -- create the open bronze cache button
@@ -120,6 +187,8 @@ local function InitFrames()
         OpenBronzeCachesButton:SetScript("OnLeave", function(self)
             GameTooltip:Hide()
         end)
+
+        CreateItemCountText(OpenBronzeCachesButton, bagItemCounts.bronzeCaches)
     end
 
     -- create the open bronze cache button
@@ -142,9 +211,21 @@ local function InitFrames()
         OpenInfiniteTreasuresButton:SetScript("OnLeave", function(self)
             GameTooltip:Hide()
         end)
+
+        CreateItemCountText(OpenInfiniteTreasuresButton, bagItemCounts.infiniteTreasures)
     end
 end
 
 
 -- init
 InitFrames()
+
+-- register bag events
+local remixFloatingUtilities = CreateFrame("Frame")
+remixFloatingUtilities:RegisterEvent("BAG_UPDATE")
+remixFloatingUtilities:RegisterEvent("BAG_UPDATE_DELAYED")
+remixFloatingUtilities:SetScript("OnEvent", function(self, event, ...)
+    if event == "BAG_UPDATE" or event == "BAG_UPDATE_DELAYED" then
+        UpdateBagItemCount()
+    end
+end)
